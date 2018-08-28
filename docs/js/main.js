@@ -33,7 +33,7 @@
         <br>
         <p>Lorem Ipsum</p>
         <br>
-        <a class='nav' href="#" v-on:click="topiano()">back.</a>
+        <a class='nav' href="#" v-on:click="topiano()">back</a>
 		</div>`,
         methods: {
             topiano: function() {
@@ -45,7 +45,7 @@
     Vue.component('nta-piano', {
         template: `<div>
         <div class="middlestuff">
-        <div class='icons'><a class='nav' href="#" v-on:click="toabout()">about.</a></p></div>
+        <div class='icons'><a class='nav' href="#" v-on:click="toabout()">about</a></p></div>
         <div class='piano'></div>
 		<div class="icons">
         <p align='right'>
