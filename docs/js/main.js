@@ -71,7 +71,8 @@ Array.prototype.shuffle = function() {
         </div>`,
         data: function() {
             return {
-                images: []
+                images: [],
+                desired_images: 10
             }
         },
         methods: {
@@ -89,16 +90,37 @@ Array.prototype.shuffle = function() {
                     var edges = data.entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges;
 					edges.shuffle();
 					edges.forEach( (edge) => {
-                        if (this.images.length < 10 ) {
+                        if (this.images.length < this.desired_images ) {
                             if (edge.node.dimensions.height > 1070 && edge.node.dimensions.height < 1090)
                             this.images.push(edge.node.display_url);
                         }
                     });
                 })
+            },
+            backfill_images: function() {
+                var default_nums = [];
+                for (var i=0; i<this.desired_images; i++)
+                    default_nums.push(i);
+                default_nums.shuffle();
+
+                default_nums.forEach( (i) => {
+                    if (this.images.length < this.desired_images) {
+                        this.images.push("/img/fallback_" + i + ".img");
+                    }
+                });
+
             }
         },
         mounted: function() {
             this.update_images();
+
+			// After 3 seconds, backfill missing images
+            // This is in case insta is down, or, more likely, have changed
+            // the format of their page such that the parsing of urls breaks.
+            setTimeout(function() {
+                    this.backfill_images();
+            }.bind(this), 3000);
+            //this.update_images();
         }
     })
 
