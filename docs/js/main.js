@@ -1,7 +1,15 @@
 (function() {
 
     $(() => {
-        app = new Vue({el:"#app"})
+        Vue.use(VueRouter);
+        const router = new VueRouter({
+           routes : [
+               { path: '/', component: Home },
+               { path: '/about', component: About }
+           ]
+        });
+        app = new Vue({router: router,
+			el:"#app"})
     });
     Array.prototype.shuffle = function() {
       var i = this.length, j, temp;
@@ -23,45 +31,21 @@
         </div>
         `
     });
-    Vue.component('nta-app', {
-        template: `<div>
-        <nta-piano v-if="page=='piano'" @toabout="toabout"></nta-piano>
-        <nta-aboutme v-if="page=='about'" @topiano="topiano"></nta-aboutme>
-        </div>`,
-        data: function() {
-            return {
-                page: "piano"
-            }
-        },
-        methods: {
-            toabout: function() {
-                this.page = "about"
-            },
-            topiano: function() {
-                this.page = "piano"
-            }
-        }
-    });
-    Vue.component('nta-aboutme', {
+    var About = Vue.component('nta-aboutme', {
 		template: `<div>
         <br>
         <br>
-        <p>Lorem Ipsum</p>
+        <p>Nick Andersen is a radio producer living in Cambridge, MA.</p>
         <br>
-        <a class='nav' href="#" v-on:click="topiano()">back</a>
-		</div>`,
-        methods: {
-            topiano: function() {
-                this.$emit('topiano')
-            }
-        }
+        <router-link class='nav' to="/">back</router-link>
+		</div>`
 	})
 	
-    Vue.component('nta-piano', {
+    var Home = Vue.component('nta-home', {
         template: `<div>
         <div class="middlestuff">
-        <div class='icons'><a class='nav' href="#" v-on:click="toabout()">about</a></p></div>
-        <div class='piano'>
+        <div class='icons'><router-link class='nav' to="/about">about</router-link></p></div>
+        <div class='home'>
         <div v-for="i in images"><img class='instaimg' v-bind:src="i"></div>
         </div>
 		<div class="icons">
@@ -79,9 +63,6 @@
             }
         },
         methods: {
-            toabout: function() {
-                this.$emit('toabout')
-            },
             update_images: function() {
                 jQuery.ajax('https://instagram.com/nicktheandersen').done((response) => {
                     response = response.replace(/\n/g,' ');
